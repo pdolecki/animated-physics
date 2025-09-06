@@ -5,7 +5,7 @@ Front End Web Developer & Instructor at Frank's Laboratory.
 
 [🎓 Animated Physics Course on Udemy](https://www.udemy.com/course/build-animated-physics-game-with-javascript)
 
-Live Demo: _Coming soon..._
+Live Demo: [Animated Physics Game](https://pd-animated-physics.netlify.app)
 
 ---
 
