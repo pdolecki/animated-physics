@@ -407,6 +407,7 @@ window.addEventListener("load", function () {
       this.hatchlings = [];
       this.gameObjects = [];
       this.score = 0;
+      this.lostHatchlings = 0;
       this.mouse = {
         x: this.width * 0.5,
         y: this.height * 0.5,
@@ -457,12 +458,22 @@ window.addEventListener("load", function () {
       }
       this.timer += deltaTime;
 
+      // add eggs periodically
       if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs) {
         this.addEgg();
         this.eggTimer = 0;
       } else {
         this.eggTimer += deltaTime;
       }
+
+      // draw status text
+      context.save();
+      context.textAlign = "left";
+      context.fillText("Score: " + this.score, 25, 50);
+      if (this.debug) {
+        context.fillText("Lost: " + this.lostHatchlings, 25, 100);
+      }
+      context.restore();
     }
 
     checkCollision(a, b) {
