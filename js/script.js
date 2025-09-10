@@ -257,13 +257,15 @@ window.addEventListener("load", function () {
       this.spriteX;
       this.spriteY;
       this.speedY = 1 + Math.random();
+      this.frameX = 0;
+      this.frameY = Math.floor(Math.random() * 2);
     }
 
     draw(context) {
       context.drawImage(
         this.image,
-        0,
-        0,
+        this.frameX * this.spriteWidth,
+        this.frameY * this.spriteHeight,
         this.spriteWidth,
         this.spriteHeight,
         this.spriteX,
@@ -296,7 +298,28 @@ window.addEventListener("load", function () {
       if (this.collisionY < this.game.topMargin) {
         this.markedForDeletion = true;
         this.game.removeGameObjects();
+        this.game.score++;
       }
+      // collision
+      let collisionObjects = [this.game.player, ...this.game.obstacles];
+      collisionObjects.forEach((object) => {
+        let [collision, distance, sumOfRadii, dx, dy] =
+          this.game.checkCollision(this, object);
+        if (collision) {
+          const unit_x = dx / distance;
+          const unit_y = dy / distance;
+          this.collisionX = object.collisionX + (sumOfRadii + 1) * unit_x;
+          this.collisionY = object.collisionY + (sumOfRadii + 1) * unit_y;
+        }
+      });
+      // collision with enemies
+      this.game.enemies.forEach((enemy) => {
+        if (this.game.checkCollision(this, enemy)[0]) {
+          this.markedForDeletion = true;
+          this.game.removeGameObjects();
+          this.game.lostHatchlings++;
+        }
+      });
     }
   }
 
@@ -383,6 +406,7 @@ window.addEventListener("load", function () {
       this.enemies = [];
       this.hatchlings = [];
       this.gameObjects = [];
+      this.score = 0;
       this.mouse = {
         x: this.width * 0.5,
         y: this.height * 0.5,
