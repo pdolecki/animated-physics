@@ -7,7 +7,7 @@ window.addEventListener("load", function () {
   ctx.fillStyle = "white";
   ctx.lineWidth = 3;
   ctx.strokeStyle = "black";
-  ctx.font = "40px Helvetica";
+  ctx.font = "40px Bangers";
   ctx.textAlign = "center";
 
   class Player {
@@ -301,7 +301,7 @@ window.addEventListener("load", function () {
       if (this.collisionY < this.game.topMargin) {
         this.markedForDeletion = true;
         this.game.removeGameObjects();
-        this.game.score++;
+        if (!this.game.gameOver) this.game.score++;
         for (let i = 0; i < 3; i++) {
           this.game.particles.push(
             new Firefly(this.game, this.collisionX, this.collisionY, "yellow")
@@ -390,7 +390,7 @@ window.addEventListener("load", function () {
       this.spriteX = this.collisionX - this.width * 0.5;
       this.spriteY = this.collisionY - this.height + 40;
       this.collisionX -= this.speedX;
-      if (this.spriteX + this.width < 0) {
+      if (this.spriteX + this.width < 0 && !this.game.gameOver) {
         this.collisionX =
           this.game.width + this.width + Math.random() * this.game.width * 0.5;
         this.collisionY =
@@ -490,6 +490,8 @@ window.addEventListener("load", function () {
       this.particles = [];
       this.gameObjects = [];
       this.score = 0;
+      this.gameOver = false;
+      this.winningScore = 5;
       this.lostHatchlings = 0;
       this.mouse = {
         x: this.width * 0.5,
@@ -539,25 +541,64 @@ window.addEventListener("load", function () {
         });
 
         this.timer = 0;
+
+        // draw status text
+        context.save();
+        context.textAlign = "left";
+        context.fillText("Score: " + this.score, 25, 50);
+        if (this.debug) {
+          context.fillText("Lost: " + this.lostHatchlings, 25, 100);
+        }
+        context.restore();
+
+        // win / lose message
+        if (this.score >= this.winningScore) {
+          this.gameOver = true;
+          context.save();
+          context.fillStyle = "rgba(0,0,0,0.5)";
+          context.fillRect(0, 0, this.width, this.height);
+          context.fillStyle = "white";
+          context.textAlign = "center";
+          context.shadowOffsetX = 4;
+          context.shadowOffsetY = 4;
+          context.shadowColor = "black";
+          let message1;
+          let message2;
+          if (this.lostHatchlings <= 5) {
+            message1 = "Bullseye!!";
+            message2 = "You bullied the bullies!";
+          } else {
+            message1 = "Bullocks";
+            message2 =
+              "You lost " +
+              this.lostHatchlings +
+              " hatchlings, don't be a pushover!";
+          }
+          context.font = "130px Bangers";
+          context.fillText(message1, this.width * 0.5, this.height * 0.5 - 20);
+          context.font = "40px Bangers";
+          context.fillText(message2, this.width * 0.5, this.height * 0.5 + 30);
+          context.fillText(
+            "Final score " + this.score + ". Press 'R' to butt heads again!",
+            this.width * 0.5,
+            this.height * 0.5 + 80
+          );
+          context.restore();
+        }
       }
       this.timer += deltaTime;
 
       // add eggs periodically
-      if (this.eggTimer > this.eggInterval && this.eggs.length < this.maxEggs) {
+      if (
+        this.eggTimer > this.eggInterval &&
+        this.eggs.length < this.maxEggs &&
+        !this.gameOver
+      ) {
         this.addEgg();
         this.eggTimer = 0;
       } else {
         this.eggTimer += deltaTime;
       }
-
-      // draw status text
-      context.save();
-      context.textAlign = "left";
-      context.fillText("Score: " + this.score, 25, 50);
-      if (this.debug) {
-        context.fillText("Lost: " + this.lostHatchlings, 25, 100);
-      }
-      context.restore();
     }
 
     checkCollision(a, b) {
