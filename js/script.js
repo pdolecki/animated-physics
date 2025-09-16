@@ -303,7 +303,7 @@ window.addEventListener("load", function () {
     update() {
       this.collisionY -= this.speedY;
       this.spriteX = this.collisionX - this.width * 0.5;
-      this.spriteY = this.collisionY - this.height * 0.5 - 50;
+      this.spriteY = this.collisionY - this.height * 0.5 - 40;
       // move to safety
       if (this.collisionY < this.game.topMargin) {
         this.markedForDeletion = true;
@@ -316,7 +316,11 @@ window.addEventListener("load", function () {
         }
       }
       // collision
-      let collisionObjects = [this.game.player, ...this.game.obstacles];
+      let collisionObjects = [
+        this.game.player,
+        ...this.game.obstacles,
+        ...this.game.eggs,
+      ];
       collisionObjects.forEach((object) => {
         let [collision, distance, sumOfRadii, dx, dy] =
           this.game.checkCollision(this, object);
@@ -329,7 +333,7 @@ window.addEventListener("load", function () {
       });
       // collision with enemies
       this.game.enemies.forEach((enemy) => {
-        if (this.game.checkCollision(this, enemy)[0]) {
+        if (this.game.checkCollision(this, enemy)[0] && !this.game.gameOver) {
           this.markedForDeletion = true;
           this.game.removeGameObjects();
           this.game.lostHatchlings++;
