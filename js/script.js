@@ -29,6 +29,7 @@ window.addEventListener("load", function () {
       this.spriteY;
       this.frameX = 0;
       this.frameY = 0;
+      this.maxFrame = 58;
       this.image = document.getElementById("bull");
     }
 
@@ -85,6 +86,13 @@ window.addEventListener("load", function () {
       else if (angle < 1.17) this.frameY = 3;
       else if (angle < 1.96) this.frameY = 4;
       else if (angle < 2.74) this.frameY = 5;
+
+      // sprite animation
+      if (this.frameX < this.maxFrame) {
+        this.frameX++;
+      } else {
+        this.frameX = 0;
+      }
 
       const distance = Math.hypot(this.dy, this.dx);
       if (distance > this.speedModifier) {
