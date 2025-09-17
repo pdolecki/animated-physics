@@ -549,6 +549,7 @@ window.addEventListener("load", function () {
       window.addEventListener("keydown", (e) => {
         if (e.key == "d") this.debug = !this.debug;
         else if (e.key == "r") this.restart();
+        else if (e.key == "f") this.toggleFullScreen();
       });
     }
 
@@ -658,6 +659,14 @@ window.addEventListener("load", function () {
       this.particles = this.particles.filter(
         (particle) => !particle.markedForDeletion
       );
+    }
+
+    toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
     }
 
     restart() {
