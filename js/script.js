@@ -325,6 +325,7 @@ window.addEventListener("load", function () {
         }
       }
 
+      // sprite animation
       if (this.frameX < this.maxFrame) {
         this.frameX++;
       } else {
@@ -373,8 +374,9 @@ window.addEventListener("load", function () {
         Math.random() * (this.game.height - this.game.topMargin);
       this.spriteX;
       this.spriteY;
-      this.frameX = Math.floor(Math.random() * 2);
+      this.frameX = 0;
       this.frameY = Math.floor(Math.random() * 4);
+      this.maxFrame = 38;
     }
 
     draw(context) {
@@ -407,8 +409,14 @@ window.addEventListener("load", function () {
     }
 
     update() {
+      // sprite animation
+      if (this.frameX < this.maxFrame) {
+        this.frameX++;
+      } else {
+        this.frameX = 0;
+      }
       this.spriteX = this.collisionX - this.width * 0.5;
-      this.spriteY = this.collisionY - this.height + 40;
+      // this.spriteY = this.collisionY - this.height + 40;
       this.collisionX -= this.speedX;
       if (this.spriteX + this.width < 0 && !this.game.gameOver) {
         this.collisionX =
@@ -436,26 +444,36 @@ window.addEventListener("load", function () {
   class Toadskin extends Enemy {
     constructor(game) {
       super(game);
-      this.image = document.getElementById("toads");
-      this.spriteWidth = 140;
-      this.spriteHeight = 260;
+      this.image = document.getElementById("toadskin");
+      this.spriteWidth = 154;
+      this.spriteHeight = 238;
       this.width = this.spriteWidth;
       this.height = this.spriteHeight;
       this.collisionX =
         this.game.width + this.width + Math.random() * this.game.width * 0.5;
+    }
+
+    update() {
+      super.update();
+      this.spriteY = this.collisionY - this.height / 2 - 90;
     }
   }
 
   class Barkskin extends Enemy {
     constructor(game) {
       super(game);
-      this.image = document.getElementById("bark");
+      this.image = document.getElementById("barkskin");
       this.spriteWidth = 183;
       this.spriteHeight = 280;
       this.width = this.spriteWidth;
       this.height = this.spriteHeight;
       this.collisionX =
         this.game.width + this.width + Math.random() * this.game.width * 0.5;
+    }
+
+    update() {
+      super.update();
+      this.spriteY = this.collisionY - this.height / 2 - 100;
     }
   }
 

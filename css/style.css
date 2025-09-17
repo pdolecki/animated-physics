@@ -28,6 +28,8 @@
 #larva,
 #toads,
 #bark,
-#larva_sprite {
+#larva_sprite,
+#barkskin,
+#toadskin {
   display: none;
 }
